@@ -7,10 +7,10 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/sign', expressAdapter({
+app.post('/jwt/sign', expressAdapter({
   controller: jwtSignController,
 }));
-app.post('/verify', expressAdapter({
+app.post('/jwt/verify', expressAdapter({
   controller: jwtVerifyController,
 }));
 
