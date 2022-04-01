@@ -15,7 +15,6 @@ function expressOAuthAdapter({ controller }) {
   return async (req, res) => {
     try {
       const httpRequest = getHttpReqFromExpress(req);
-      console.log(httpRequest);
       const { oauthProviderUrl } = await controller.execute(httpRequest);
       return res.redirect(oauthProviderUrl);
     } catch (error) {
