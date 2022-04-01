@@ -9,7 +9,7 @@ module.exports = {
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       redirectUrl: `${process.env.HOST}:${process.env.PORT}/oauth/github/cb`,
-      requestBaseUrl: process.env.GITHUB_REQUEST_BASE_URL,
+      baseUrl: process.env.GITHUB_OAUTH_BASE_URL,
     }
   }
 }

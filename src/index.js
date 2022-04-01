@@ -1,10 +1,10 @@
 const express = require('express');
 const config = require('../config');
-const { expressAdapter, expressOAuthAdapter } = require('./adapters');
+const { expressAdapter } = require('./adapters');
+const oauthRouter = require('./modules/oauth/router');
 const { 
   jwtSignController, 
-  jwtVerifyController, 
-  githubOAuthController } = require('./auth');
+  jwtVerifyController } = require('./auth');
 
 const app = express();
 
@@ -17,16 +17,7 @@ app.post('/jwt/verify', expressAdapter({
   controller: jwtVerifyController,
 }));
 
-//OAuth
-//Github
-app.get('/oauth/github', expressOAuthAdapter({
-  controller: githubOAuthController,
-}));
-
-app.get('/oauth/github/cb', (req, res) => {
-  const { code } = req.query;
-  res.status(201).json({ code });
-});
+app.use('/oauth', oauthRouter);
 
 app.listen(config.port, () => {
   console.log(`app started at ${config.port}`);
