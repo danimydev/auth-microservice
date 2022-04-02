@@ -3,7 +3,10 @@ require('dotenv').config();
 module.exports = {
   port: process.env.PORT,
   host: process.env.HOST,
-  jwtKey: process.env.JWT_KEY,
+  jwt: {
+    key: process.env.JWT_KEY,
+    defaultExp: process.env.JWT_DEFAULT_EXP,
+  },
   oauth:{
     github:{
       clientId: process.env.GITHUB_CLIENT_ID,

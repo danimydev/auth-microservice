@@ -1,24 +1,17 @@
 const express = require('express');
-const config = require('../config');
-const { expressAdapter } = require('./adapters');
+const { port } = require('../config');
+
+const jwtRouter = require('./modules/jwt/router');
 const oauthRouter = require('./modules/oauth/router');
-const { 
-  jwtSignController, 
-  jwtVerifyController } = require('./auth');
 
 const app = express();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.post('/jwt/sign', expressAdapter({
-  controller: jwtSignController,
-}));
-app.post('/jwt/verify', expressAdapter({
-  controller: jwtVerifyController,
-}));
-
+app.use('/jwt', jwtRouter);
 app.use('/oauth', oauthRouter);
 
-app.listen(config.port, () => {
-  console.log(`app started at ${config.port}`);
+app.listen(port, () => {
+  console.log(`app started at ${port}`);
 });
