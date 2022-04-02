@@ -1,8 +1,8 @@
 const express = require('express');
 const { port } = require('../config');
 
-const jwtRouter = require('./modules/jwt/router');
-const oauthRouter = require('./modules/oauth/router');
+const jwtRouter = require('./jwt/router');
+const oauthRouter = require('./oauth/router');
 
 const app = express();
 

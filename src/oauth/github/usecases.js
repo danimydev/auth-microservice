@@ -1,4 +1,4 @@
-const { oauth: { github } } = require('../../../../config');
+const { oauth: { github } } = require('../../../config');
 const axios = require('axios');
 
 function getGitHubAuthorizationUrl({ path, scope }) {
