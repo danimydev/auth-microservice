@@ -9,7 +9,6 @@ function getGitHubAuthorizationUrl({ path, scope }) {
 async function getGitHubUser({ code }) {
   try {
     const token = await getAccessToken({ code });
-    console.log(token);
     const url = 'http://api.github.com/user';
     const user = await axios.get(url, {
       headers:{
@@ -26,7 +25,6 @@ async function getAccessToken({ code }) {
   try {
     const { baseUrl, clientId, clientSecret } = github;
     const url = `${baseUrl}/access_token?client_id=${clientId}&client_secret=${clientSecret}&code=${code}`;
-    console.log(url);
     const body = await axios.get(url, {
       headers:{
         'Accept': 'application/json'
