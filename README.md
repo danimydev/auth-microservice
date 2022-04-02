@@ -1,14 +1,23 @@
 # auth-microservice
-This is a tiny node js microservice that runs on whichever port you set on the .env file, it provides routes for both signing and verifying data
+This is a node js microservice that you can setup on whichever port you delated in the .env file, it provides routes for both multiple authentication strategies such as jsonwebtokens and oauth.
 
 ## Requirements
 You must have a node js version installed (greater than 14).
 
 ## Install
-Just clone the repository and fill the **.env** with your preferences
+Just clone the repository and create a **.env** with your preferences following the example file. remember that in order to use oauth routes, you must go to the provider you want and create a new app.
+
+**.env.example**
 ```
-PORT
-JWT_KEY
+PORT=
+HOST=http://localhost
+
+JWT_KEY=
+JWT_DEFAULT_EXP=1h
+
+GITHUB_REQUEST_BASE_URL=https://github.com/login/oauth/authorize
+GITHUB_CLIENT_ID=
+GITHUB_CLEINT_SECRET=
 ```
 Once you got your .env set run the following command
 ```
@@ -37,32 +46,43 @@ You will get this output:
 [nodemon] starting `node src/index.js`
 app started at <PORT>
 ```
-Now you can use it! It allows you to hit make http calls to localhost:<PORT>
+Now you can start using it by making http requests to therese routes, each route represents an strategy of authentication.
+
 Routes:
+
+**/jwt**
   
-  **/sign**
+- **GET /sign**
   
     - body
-      - data: An object that represents the data you want to sign (register).
-      - exp: An expiration time you want to passed.
+      - An object that represents the data you want to sign (register).
   
-  **/verify**
+- **GET /verify**
   
     - headers
-      - authorization: A bearer token.
+      - authorization: A Bearer token provided by the previous route.
+
+**/oauth**
+
+- **/github**
+    
+    - **GET /authorization**
+        - redirects the client to github authorization page, after accepting it will go back and respond with the auth code obtained.
+    
+    - **GET /access_token?code=**
+        - request an access token with the authorization code to then request the user info and return it to the client.
   
 ## Examples
-Sign or register data
+Using jsonwebtokens (jwt)
+
 Request
 ```
-curl --location --request POST 'localhost:3000/sign' \
+curl --location --request POST 'localhost:3000/jwt/sign' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "data": {
         "email":"test@gmail.com",
         "password":"123456"
-    },
-    "exp":"10000"
+    }
 }'
 ```
 Response
@@ -81,7 +101,7 @@ curl --location --request POST 'localhost:3000/verify' \
 Response
 ```
 {
-    "user": {
+    "data": {
         "email": "test@gmail.com",
         "password": "123456",
         "iat": 1648437100,
@@ -89,7 +109,6 @@ Response
     }
 }
 ```
+
 ## Collaborate
 Feel free to fork this project and collaborate with me!
-
-
