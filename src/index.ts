@@ -1,5 +1,5 @@
-const express = require('express');
-const { port } = require('../config');
+import express from 'express';
+import config from './config';
 
 const jwtRouter = require('./jwt/router');
 const oauthRouter = require('./oauth/router');
@@ -12,6 +12,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/jwt', jwtRouter);
 app.use('/oauth', oauthRouter);
 
-app.listen(port, () => {
-  console.log(`app started at ${port}`);
+app.listen(config.port, () => {
+  console.log(`app started at ${config.port}`);
 });
