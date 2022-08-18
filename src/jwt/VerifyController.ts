@@ -12,8 +12,8 @@ export default class VerifyController implements HttpController {
     execute(httpRequest: HttpRequest): HttpResponse {
 
         try {
-            const { headers } = httpRequest;
-            const bearerToken = headers['Authorization'].split(' ')[1];
+            const { headers: { authorization } } = httpRequest;
+            const bearerToken = authorization.split(' ')[1];
 
             if (!bearerToken) {
                 return {
