@@ -28,8 +28,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/jwt/sign', adaptRequest(signController));
-app.use('/jwt/verify', adaptRequest(verifyController));
+app.use('/health', function (req: Request, res: Response): void {
+  res.status(200).json('Hello World');
+});
+app.post('/jwt/sign', adaptRequest(signController));
+app.get('/jwt/verify', adaptRequest(verifyController));
 
 app.listen(config.port, () => {
   console.log(`app started at ${config.port}`);
