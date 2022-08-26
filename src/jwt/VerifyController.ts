@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { HttpRequest, HttpResponse, HttpController } from '../web/types';
+import { HttpRequest, HttpResponse, HttpController, HttpStatusCodes } from '../web/types';
 
 export default class VerifyController implements HttpController {
 
@@ -17,7 +17,7 @@ export default class VerifyController implements HttpController {
 
             if (!bearerToken) {
                 return {
-                    statusCode: 401,
+                    statusCode: HttpStatusCodes.FORBIDDEN,
                     body: {
                         error: 'no token passed',
                     }
@@ -28,7 +28,7 @@ export default class VerifyController implements HttpController {
 
             if (!data) {
                 return {
-                    statusCode: 401,
+                    statusCode: HttpStatusCodes.FORBIDDEN,
                     body: {
                         error: 'unauthorized',
                     }
@@ -36,7 +36,7 @@ export default class VerifyController implements HttpController {
             }
 
             return {
-                statusCode: 200,
+                statusCode: HttpStatusCodes.OK,
                 body: {
                     data: data,
                 }
@@ -44,7 +44,7 @@ export default class VerifyController implements HttpController {
 
         } catch (error: any) {
             return {
-                statusCode: 500,
+                statusCode: HttpStatusCodes.INTERNAL_ERROR,
                 body: {
                     error: error.message,
                 }

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { HttpRequest, HttpResponse, HttpController } from '../web/types';
+import { HttpRequest, HttpResponse, HttpController, HttpStatusCodes } from '../web/types';
 
 export default class SignController implements HttpController {
 
@@ -17,7 +17,7 @@ export default class SignController implements HttpController {
             const token = jwt.sign(body, this.secretKey);
 
             return {
-                statusCode: 201,
+                statusCode: HttpStatusCodes.OK,
                 body: {
                     token: token,
                 }
@@ -25,7 +25,7 @@ export default class SignController implements HttpController {
 
         } catch (error: any) {
             return {
-                statusCode: 500,
+                statusCode: HttpStatusCodes.INTERNAL_ERROR,
                 body: {
                     error: error.message,
                 }
