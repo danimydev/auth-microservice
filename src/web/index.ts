@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import config from '../config';
 import { HttpRequest, HttpResponse, HttpController } from './types';
 import { signController, verifyController } from '../jwt';
 
@@ -34,6 +33,4 @@ app.use('/health', function (req: Request, res: Response): void {
 app.post('/jwt/sign', adaptRequest(signController));
 app.get('/jwt/verify', adaptRequest(verifyController));
 
-app.listen(config.port, () => {
-  console.log(`app started at ${config.port}`);
-});
+export default app;
