@@ -10,9 +10,9 @@ type EnvConfig = {
 
 const envConfig: EnvConfig = {
   port: Number(process.env.PORT),
-  host: process.env.HOST || 'http://localhost',
+  host: String(process.env.HOST),
   jwt: {
-    key: process.env.JWT_KEY || 'secret',
+    key: String(process.env.JWT_KEY),
   },
 }
 
