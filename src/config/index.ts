@@ -7,6 +7,10 @@ type EnvConfig = {
   jwt: {
     key: string,
   },
+  github: {
+    clientId: string,
+    clientSecret: string,
+  }
 }
 
 const envConfig: EnvConfig = {
@@ -15,6 +19,10 @@ const envConfig: EnvConfig = {
   jwt: {
     key: String(process.env.JWT_KEY),
   },
+  github: {
+    clientId: String(process.env.GITHUB_CLIENT_ID),
+    clientSecret: String(process.env.GITHUB_CLIENT_SECRET),
+  }
 }
 
 export default envConfig;
