@@ -1,25 +1,29 @@
 import jwt from 'jsonwebtoken';
+import crypto from 'node:crypto';
 import { HttpRequest, HttpResponse, HttpController, HttpStatusCodes } from '../web/types';
 
 export default class SignController implements HttpController {
-
-    private secretKey: string;
-
-    constructor(secretKey: string) {
-        this.secretKey = secretKey;
-    }
 
     execute(httpRequest: HttpRequest): HttpResponse {
 
         try {
             const { body } = httpRequest;
 
-            const token = jwt.sign(body, this.secretKey);
+            if (!body) {
+                return {
+                    statusCode: HttpStatusCodes.BAD_REQUEST,
+                    body: 'missing body',
+                }
+            }
+
+            const secretKey = crypto.randomBytes(48).toString('hex');
+            const token = jwt.sign(body, secretKey);
 
             return {
                 statusCode: HttpStatusCodes.OK,
                 body: {
-                    token: token,
+                    token,
+                    secretKey,
                 }
             }
 

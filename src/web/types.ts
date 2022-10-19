@@ -18,4 +18,5 @@ export enum HttpStatusCodes {
     'RESOURCE_CREATED' = 201,
     'FORBIDDEN' = 401,
     'INTERNAL_ERROR' = 500,
+    'BAD_REQUEST' = 400,
 }

@@ -3,28 +3,32 @@ import { HttpRequest, HttpResponse, HttpController, HttpStatusCodes } from '../w
 
 export default class VerifyController implements HttpController {
 
-    private secretKey: string;
-
-    constructor(secretKey: string) {
-        this.secretKey = secretKey;
-    }
-
     execute(httpRequest: HttpRequest): HttpResponse {
 
         try {
-            const { headers: { authorization } } = httpRequest;
+            const { headers: { authorization }, body: { secretKey } } = httpRequest;
+
+            if (!secretKey) {
+                return {
+                    statusCode: HttpStatusCodes.BAD_REQUEST,
+                    body: {
+                        error: 'no secret key passed',
+                    }
+                }    
+            }
+
             const bearerToken = authorization.split(' ')[1];
 
             if (!bearerToken) {
                 return {
-                    statusCode: HttpStatusCodes.FORBIDDEN,
+                    statusCode: HttpStatusCodes.BAD_REQUEST,
                     body: {
                         error: 'no token passed',
                     }
                 }
             }
 
-            const data = jwt.verify(bearerToken, this.secretKey);
+            const data = jwt.verify(bearerToken, secretKey);
 
             if (!data) {
                 return {
