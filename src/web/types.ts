@@ -2,6 +2,7 @@ export type HttpRequest = {
     headers: any,
     params: any,
     body: any,
+    query: any,
 }
 
 export type HttpResponse = {
