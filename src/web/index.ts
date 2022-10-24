@@ -1,32 +1,12 @@
 import express, { Request, Response } from 'express';
-import { HttpRequest, HttpResponse, HttpController, HttpStatusCodes } from './types';
 import { signController, verifyController } from '../jwt';
-
-function adaptRequest(controller: HttpController) {
-  return async (req: Request, res: Response) => {
-
-    try {
-      const httpRequest: HttpRequest = {
-        headers: req.headers,
-        params: req.params,
-        body: req.body,
-      }
-      const httpResponse: HttpResponse = await controller.execute(httpRequest);
-      res.status(httpResponse.statusCode).json(httpResponse.body);
-    } catch (error: any) {
-      res.status(HttpStatusCodes.INTERNAL_ERROR).json({
-        error: error.message
-      });
-    }
-
-  }
-}
+import adaptRequest from './adapter';
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/health', function (req: Request, res: Response): void {
+app.use('/health', (req: Request, res: Response): void => {
   res.status(200).json('Hello World');
 });
 
