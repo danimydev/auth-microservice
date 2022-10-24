@@ -13,6 +13,10 @@ export interface HttpController {
     execute: Function
 }
 
+export interface HttpMiddleware {
+    
+}
+
 export enum HttpStatusCodes {
     'OK' = 200,
     'RESOURCE_CREATED' = 201,
