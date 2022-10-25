@@ -1,14 +1,10 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import envConfig from "../config";
 import { HttpController, HttpRequest, HttpResponse, HttpStatusCodes } from "../web/types";
 
 class CallBackController implements HttpController {
 
   public readonly authCallBackRoute = new URL(envConfig.github.redirectUrl).pathname;
-
-  constructor() {
-
-  }
 
   async execute(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -44,8 +40,23 @@ class CallBackController implements HttpController {
         accept: 'application/json',
       },
     }
-    const rawResponse = await axios.post('https://github.com/login/oauth/access_token', requestBody, opts);
-    return rawResponse.data;
+    const { data } = await axios.post('https://github.com/login/oauth/access_token', requestBody, opts);
+    const user = await this.getUser(data.access_token);
+    return { data, user };
+  }
+
+  private async getUser(accessToken: string) {
+    const config = {
+      headers: {
+        authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const { data } = await axios.get('https://api.github.com/user', config);
+    return {
+      username: data.login,
+      name: data.name,
+      profileImgUrl: data.avatar_url,
+    };
   }
 }
 
