@@ -45,7 +45,6 @@ class CallBackController implements HttpController {
       },
     }
     const rawResponse = await axios.post('https://github.com/login/oauth/access_token', requestBody, opts);
-    console.log(rawResponse.data);
     return rawResponse.data;
   }
 }
