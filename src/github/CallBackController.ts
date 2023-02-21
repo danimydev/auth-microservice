@@ -1,10 +1,15 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import envConfig from "../config";
-import { HttpController, HttpRequest, HttpResponse, HttpStatusCodes } from "../web/types";
+import {
+  HttpController,
+  HttpRequest,
+  HttpResponse,
+  HttpStatusCodes,
+} from "../web/types";
 
 class CallBackController implements HttpController {
-
-  public readonly authCallBackRoute = new URL(envConfig.github.redirectUrl).pathname;
+  public readonly authCallBackRoute = new URL(envConfig.github.redirectUrl)
+    .pathname;
 
   async execute(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -12,19 +17,19 @@ class CallBackController implements HttpController {
       if (!code) {
         return {
           statusCode: HttpStatusCodes.BAD_REQUEST,
-          body: 'No code passed by github',
-        }
+          body: "No code passed by github",
+        };
       }
       const data = await this.getAccessToken(code);
       return {
         statusCode: HttpStatusCodes.OK,
         body: data,
-      }
+      };
     } catch (error) {
       return {
         statusCode: HttpStatusCodes.INTERNAL_ERROR,
         body: error,
-      }
+      };
     }
   }
 
@@ -37,10 +42,14 @@ class CallBackController implements HttpController {
     };
     const opts = {
       headers: {
-        accept: 'application/json',
+        accept: "application/json",
       },
-    }
-    const { data } = await axios.post('https://github.com/login/oauth/access_token', requestBody, opts);
+    };
+    const { data } = await axios.post(
+      "https://github.com/login/oauth/access_token",
+      requestBody,
+      opts
+    );
     const user = await this.getUser(data.access_token);
     return { data, user };
   }
@@ -51,7 +60,7 @@ class CallBackController implements HttpController {
         authorization: `Bearer ${accessToken}`,
       },
     };
-    const { data } = await axios.get('https://api.github.com/user', config);
+    const { data } = await axios.get("https://api.github.com/user", config);
     return {
       username: data.login,
       name: data.name,
