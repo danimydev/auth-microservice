@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { signController, verifyController } from "../jwt";
+import { signController, verifyController, logoutController } from "../jwt";
 import { controllerAdapter, redirectAdapter } from "./adapter";
 import { callbackController, loginAuthUrl } from "../github";
 
@@ -13,6 +13,7 @@ app.use("/health", (req: Request, res: Response): void => {
 
 app.post("/jwt/sign", controllerAdapter(signController));
 app.post("/jwt/verify", controllerAdapter(verifyController));
+app.post("/jwt/logout", controllerAdapter(logoutController));
 
 app.get("/oauth/github/login", redirectAdapter(loginAuthUrl));
 app.get(
