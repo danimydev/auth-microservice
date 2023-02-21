@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { HttpController, HttpRequest, HttpResponse, HttpStatusCodes } from "./types";
+import {
+  HttpController,
+  HttpRequest,
+  HttpResponse,
+  HttpStatusCodes,
+} from "./types";
 
 function controllerAdapter(controller: HttpController) {
   return async (req: Request, res: Response) => {
@@ -9,15 +14,15 @@ function controllerAdapter(controller: HttpController) {
         params: req.params,
         body: req.body,
         query: req.query,
-      }
+      };
       const httpResponse: HttpResponse = await controller.execute(httpRequest);
       res.status(httpResponse.statusCode).json(httpResponse.body);
     } catch (error: any) {
       res.status(HttpStatusCodes.INTERNAL_ERROR).json({
-        error: error.message
+        error: error.message,
       });
     }
-  }
+  };
 }
 
 function redirectAdapter(redirectUrl: string) {
@@ -26,13 +31,10 @@ function redirectAdapter(redirectUrl: string) {
       res.redirect(redirectUrl);
     } catch (error: any) {
       res.status(HttpStatusCodes.INTERNAL_ERROR).json({
-        error: error.message
+        error: error.message,
       });
     }
-  }
+  };
 }
 
-export {
-  controllerAdapter,
-  redirectAdapter,
-};
+export { controllerAdapter, redirectAdapter };

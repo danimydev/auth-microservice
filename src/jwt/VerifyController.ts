@@ -1,60 +1,63 @@
-import jwt from 'jsonwebtoken';
-import { HttpRequest, HttpResponse, HttpController, HttpStatusCodes } from '../web/types';
+import jwt from "jsonwebtoken";
+import {
+  HttpRequest,
+  HttpResponse,
+  HttpController,
+  HttpStatusCodes,
+} from "../web/types";
 
 export default class VerifyController implements HttpController {
+  execute(httpRequest: HttpRequest): HttpResponse {
+    try {
+      const {
+        headers: { authorization },
+        body: { secretKey },
+      } = httpRequest;
 
-    execute(httpRequest: HttpRequest): HttpResponse {
+      if (!secretKey) {
+        return {
+          statusCode: HttpStatusCodes.BAD_REQUEST,
+          body: {
+            error: "no secret key passed",
+          },
+        };
+      }
 
-        try {
-            const { headers: { authorization }, body: { secretKey } } = httpRequest;
+      const bearerToken = authorization.split(" ")[1];
 
-            if (!secretKey) {
-                return {
-                    statusCode: HttpStatusCodes.BAD_REQUEST,
-                    body: {
-                        error: 'no secret key passed',
-                    }
-                }    
-            }
+      if (!bearerToken) {
+        return {
+          statusCode: HttpStatusCodes.BAD_REQUEST,
+          body: {
+            error: "no token passed",
+          },
+        };
+      }
 
-            const bearerToken = authorization.split(' ')[1];
+      const data = jwt.verify(bearerToken, secretKey);
 
-            if (!bearerToken) {
-                return {
-                    statusCode: HttpStatusCodes.BAD_REQUEST,
-                    body: {
-                        error: 'no token passed',
-                    }
-                }
-            }
+      if (!data) {
+        return {
+          statusCode: HttpStatusCodes.FORBIDDEN,
+          body: {
+            error: "unauthorized",
+          },
+        };
+      }
 
-            const data = jwt.verify(bearerToken, secretKey);
-
-            if (!data) {
-                return {
-                    statusCode: HttpStatusCodes.FORBIDDEN,
-                    body: {
-                        error: 'unauthorized',
-                    }
-                }
-            }
-
-            return {
-                statusCode: HttpStatusCodes.OK,
-                body: {
-                    data: data,
-                }
-            }
-
-        } catch (error: any) {
-            return {
-                statusCode: HttpStatusCodes.INTERNAL_ERROR,
-                body: {
-                    error: error.message,
-                }
-            }
-        }
-
+      return {
+        statusCode: HttpStatusCodes.OK,
+        body: {
+          data: data,
+        },
+      };
+    } catch (error: any) {
+      return {
+        statusCode: HttpStatusCodes.INTERNAL_ERROR,
+        body: {
+          error: error.message,
+        },
+      };
     }
-
+  }
 }

@@ -4,7 +4,4 @@ import VerifyController from "./VerifyController";
 const signController = new SignController();
 const verifyController = new VerifyController();
 
-export {
-    signController,
-    verifyController,
-}
+export { signController, verifyController };
