@@ -8,6 +8,9 @@ const envConfig = {
     clientSecret: String(process.env.GITHUB_CLIENT_SECRET),
     redirectUrl: String(process.env.GITHUB_AUTH_CALLBACK_URL),
   },
+  redis: {
+    url: String(process.env.REDIS_URL),
+  },
 };
 
 export default envConfig;
