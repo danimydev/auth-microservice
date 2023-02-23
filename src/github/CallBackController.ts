@@ -40,17 +40,21 @@ class CallBackController implements HttpController {
       code,
       redirect_uri: envConfig.github.redirectUrl,
     };
-    const opts = {
+
+    const config = {
       headers: {
         accept: "application/json",
       },
     };
+
     const { data } = await axios.post(
       "https://github.com/login/oauth/access_token",
       requestBody,
-      opts
+      config
     );
+
     const user = await this.getUser(data.access_token);
+
     return { data, user };
   }
 
@@ -60,7 +64,9 @@ class CallBackController implements HttpController {
         authorization: `Bearer ${accessToken}`,
       },
     };
+
     const { data } = await axios.get("https://api.github.com/user", config);
+
     return {
       username: data.login,
       name: data.name,
