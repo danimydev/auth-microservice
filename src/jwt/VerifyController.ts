@@ -18,12 +18,12 @@ export default class VerifyController implements HttpController {
         return {
           statusCode: HttpStatusCodes.BAD_REQUEST,
           body: {
-            error: "no secret key passed",
+            error: "no secretKey found in body",
           },
         };
       }
 
-      const bearerToken = authorization.split(" ")[1];
+      const [, bearerToken ] = authorization.split(" ");
 
       if (!bearerToken) {
         return {
@@ -47,9 +47,7 @@ export default class VerifyController implements HttpController {
 
       return {
         statusCode: HttpStatusCodes.OK,
-        body: {
-          data: data,
-        },
+        body: { data, },
       };
     } catch (error: any) {
       return {
