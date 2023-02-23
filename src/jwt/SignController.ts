@@ -15,7 +15,9 @@ export default class SignController implements HttpController {
       if (!body) {
         return {
           statusCode: HttpStatusCodes.BAD_REQUEST,
-          body: "missing body",
+          body: {
+            error: "body must be non empty json",
+          },
         };
       }
 
