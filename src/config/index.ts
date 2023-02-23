@@ -1,16 +1,7 @@
 import { config } from "dotenv";
 config();
 
-type EnvConfig = {
-  port: number;
-  github: {
-    clientId: string;
-    clientSecret: string;
-    redirectUrl: string;
-  };
-};
-
-const envConfig: EnvConfig = {
+const envConfig = {
   port: Number(process.env.PORT),
   github: {
     clientId: String(process.env.GITHUB_CLIENT_ID),
