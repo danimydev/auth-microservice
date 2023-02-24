@@ -1,0 +1,12 @@
+// See https://containers.dev/implementors/json_reference/ for configuration reference
+{
+	"name": "auth-microservices",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"forwardPorts": [
+		"3000:3000"
+	],
+	"remoteUser": "node",
+	"postCreateCommand": "npm install"
+}
