@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import crypto from "node:crypto";
+import redisClient from '../redis';
 import {
   HttpRequest,
   HttpResponse,
@@ -8,7 +9,7 @@ import {
 } from "../web/types";
 
 export default class SignController implements HttpController {
-  execute(httpRequest: HttpRequest): HttpResponse {
+  async execute(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { body } = httpRequest;
 
@@ -23,12 +24,12 @@ export default class SignController implements HttpController {
 
       const secretKey = crypto.randomBytes(48).toString("hex");
       const token = jwt.sign(body, secretKey);
+      await this.storeUserCredentials(secretKey, token);
 
       return {
         statusCode: HttpStatusCodes.OK,
         body: {
           token,
-          secretKey,
         },
       };
     } catch (error: any) {
@@ -38,6 +39,20 @@ export default class SignController implements HttpController {
           error: error.message,
         },
       };
+    }
+  }
+
+  private async storeUserCredentials(secretKey: string, token: string) {
+    try {
+      let tokenAlreadyExist = await redisClient.get(token) !== null;
+
+      if (tokenAlreadyExist) {
+        throw new Error('user already signed');
+      }
+
+      await redisClient.set(token, secretKey);
+    } catch (error) {
+      throw error;
     }
   }
 }

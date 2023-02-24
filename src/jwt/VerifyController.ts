@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import redisClient from '../redis';
 import {
   HttpRequest,
   HttpResponse,
@@ -7,32 +8,24 @@ import {
 } from "../web/types";
 
 export default class VerifyController implements HttpController {
-  execute(httpRequest: HttpRequest): HttpResponse {
+  async execute(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const {
         headers: { authorization },
-        body: { secretKey },
       } = httpRequest;
 
-      if (!secretKey) {
-        return {
-          statusCode: HttpStatusCodes.BAD_REQUEST,
-          body: {
-            error: "no secretKey found in body",
-          },
-        };
-      }
-
-      const [, bearerToken ] = authorization.split(" ");
+      const [, bearerToken] = authorization.split(" ");
 
       if (!bearerToken) {
         return {
           statusCode: HttpStatusCodes.BAD_REQUEST,
           body: {
-            error: "no token passed",
+            error: "no bearer token passed",
           },
         };
       }
+
+      const secretKey = await this.getStoredUserSecretKey(bearerToken);
 
       const data = jwt.verify(bearerToken, secretKey);
 
@@ -56,6 +49,20 @@ export default class VerifyController implements HttpController {
           error: error.message,
         },
       };
+    }
+  }
+
+  private async getStoredUserSecretKey(token: string) {
+    try {
+      const secretKey = await redisClient.get(token);
+
+      if (!secretKey) {
+        throw new Error('token is not registered');
+      }
+
+      return secretKey;
+    } catch (error) {
+      throw error;
     }
   }
 }
